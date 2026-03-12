@@ -91,7 +91,6 @@ Depending on the lab, consider creating wiki files for:
 - `quality-assurance.md` — Quality assurance concepts, `pytest`, assertions.
 - `http.md` — HTTP protocol, requests, responses, and status codes.
 - `http-auth.md` — HTTP authentication via API keys and authorization.
-- `web-development.md` — HTTP, endpoints, status codes, URLs, JSON, APIs.
 - `database.md` — Database concepts, PostgreSQL, pgAdmin, SQL, and schema management.
 - `sql.md` — SQL basics: SELECT, INSERT, WHERE statements.
 - `pgadmin.md` — pgAdmin web interface for PostgreSQL database management.
