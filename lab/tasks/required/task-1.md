@@ -34,9 +34,9 @@ uv run agent.py "What does REST stand for?"
 
 Your agent needs an LLM that supports the OpenAI-compatible chat completions API. You are free to use any provider.
 
-**Recommended: [Qwen Code API](../../wiki/qwen.md#set-up-the-qwen-code-api-remote-machine)**
+**Recommended: [Qwen Code API](../../../wiki/qwen.md#set-up-the-qwen-code-api-remote-machine)**
 
-[Qwen Code](../../wiki/qwen.md#what-is-qwen-code) provides **1000 free requests per day**, works from Russia, and requires no credit card. Follow the [setup instructions](../setup-simple.md#17-set-up-llm-access-qwen-code-api) to deploy it on your VM.
+[Qwen Code](../../../wiki/qwen.md#what-is-qwen-code) provides **1000 free requests per day**, works from Russia, and requires no credit card. Follow the [setup instructions](../setup-simple.md#17-set-up-llm-access-qwen-code-api) to deploy it on your VM.
 
 | Model | Tool calling | Notes |
 |-------|-------------|-------|
@@ -54,6 +54,7 @@ Your agent needs an LLM that supports the OpenAI-compatible chat completions API
 
 > [!WARNING]
 > **OpenRouter free-tier limitations:**
+>
 > - Free models have a **50 requests per day** limit per account.
 > - Free models can be **temporarily unavailable** due to upstream provider load (`429` errors).
 > - The autochecker runs 20 questions against your agent — free-tier rate limits may cause failures.
