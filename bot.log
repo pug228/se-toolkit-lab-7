@@ -1,0 +1,293 @@
+2026-03-20 19:21:48,438 - telegram.ext - ERROR - Network Retry Loop (Bootstrap Initialize Application): Timed out: Timed out. Failed run number 0 of 0. Aborting.
+Traceback (most recent call last):
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/httpx/_transports/default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/httpx/_transports/default.py", line 394, in handle_async_request
+    resp = await self._pool.handle_async_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/httpcore/_async/connection_pool.py", line 256, in handle_async_request
+    raise exc from None
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/httpcore/_async/connection_pool.py", line 236, in handle_async_request
+    response = await connection.handle_async_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        pool_request.request
+        ^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/httpcore/_async/connection.py", line 101, in handle_async_request
+    raise exc
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/httpcore/_async/connection.py", line 78, in handle_async_request
+    stream = await self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/httpcore/_async/connection.py", line 156, in _connect
+    stream = await stream.start_tls(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/httpcore/_backends/anyio.py", line 67, in start_tls
+    with map_exceptions(exc_map):
+         ~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/alan/.local/share/uv/python/cpython-3.14.2-linux-x86_64-gnu/lib/python3.14/contextlib.py", line 162, in __exit__
+    self.gen.throw(value)
+    ~~~~~~~~~~~~~~^^^^^^^
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/httpcore/_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectTimeout
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/telegram/request/_httpxrequest.py", line 279, in do_request
+    res = await self._client.request(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/httpx/_client.py", line 1540, in request
+    return await self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/httpx/_client.py", line 1629, in send
+    response = await self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/httpx/_client.py", line 1657, in _send_handling_auth
+    response = await self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/httpx/_client.py", line 1694, in _send_handling_redirects
+    response = await self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/httpx/_client.py", line 1730, in _send_single_request
+    response = await transport.handle_async_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/httpx/_transports/default.py", line 393, in handle_async_request
+    with map_httpcore_exceptions():
+         ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/alan/.local/share/uv/python/cpython-3.14.2-linux-x86_64-gnu/lib/python3.14/contextlib.py", line 162, in __exit__
+    self.gen.throw(value)
+    ~~~~~~~~~~~~~~^^^^^^^
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/httpx/_transports/default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectTimeout
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/telegram/ext/_utils/networkloop.py", line 161, in network_retry_loop
+    await do_action()
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/telegram/ext/_utils/networkloop.py", line 136, in do_action
+    await action_cb()
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/telegram/ext/_application.py", line 489, in initialize
+    await self.bot.initialize()
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/telegram/ext/_extbot.py", line 316, in initialize
+    await super().initialize()
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/telegram/_bot.py", line 857, in initialize
+    await self.get_me()
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/telegram/ext/_extbot.py", line 2008, in get_me
+    return await super().get_me(
+           ^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/telegram/_bot.py", line 990, in get_me
+    result = await self._post(
+             ^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/telegram/_bot.py", line 704, in _post
+    return await self._do_post(
+           ^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/telegram/ext/_extbot.py", line 370, in _do_post
+    return await super()._do_post(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/telegram/_bot.py", line 733, in _do_post
+    result = await request.post(
+             ^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/telegram/request/_baserequest.py", line 198, in post
+    result = await self._request_wrapper(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/telegram/request/_baserequest.py", line 305, in _request_wrapper
+    code, payload = await self.do_request(
+                    ^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/telegram/request/_httpxrequest.py", line 296, in do_request
+    raise TimedOut from err
+telegram.error.TimedOut: Timed out
+Bot starting...
+Traceback (most recent call last):
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/httpx/_transports/default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/httpx/_transports/default.py", line 394, in handle_async_request
+    resp = await self._pool.handle_async_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/httpcore/_async/connection_pool.py", line 256, in handle_async_request
+    raise exc from None
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/httpcore/_async/connection_pool.py", line 236, in handle_async_request
+    response = await connection.handle_async_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        pool_request.request
+        ^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/httpcore/_async/connection.py", line 101, in handle_async_request
+    raise exc
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/httpcore/_async/connection.py", line 78, in handle_async_request
+    stream = await self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/httpcore/_async/connection.py", line 156, in _connect
+    stream = await stream.start_tls(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/httpcore/_backends/anyio.py", line 67, in start_tls
+    with map_exceptions(exc_map):
+         ~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/alan/.local/share/uv/python/cpython-3.14.2-linux-x86_64-gnu/lib/python3.14/contextlib.py", line 162, in __exit__
+    self.gen.throw(value)
+    ~~~~~~~~~~~~~~^^^^^^^
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/httpcore/_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectTimeout
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/telegram/request/_httpxrequest.py", line 279, in do_request
+    res = await self._client.request(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/httpx/_client.py", line 1540, in request
+    return await self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/httpx/_client.py", line 1629, in send
+    response = await self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/httpx/_client.py", line 1657, in _send_handling_auth
+    response = await self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/httpx/_client.py", line 1694, in _send_handling_redirects
+    response = await self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/httpx/_client.py", line 1730, in _send_single_request
+    response = await transport.handle_async_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/httpx/_transports/default.py", line 393, in handle_async_request
+    with map_httpcore_exceptions():
+         ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/alan/.local/share/uv/python/cpython-3.14.2-linux-x86_64-gnu/lib/python3.14/contextlib.py", line 162, in __exit__
+    self.gen.throw(value)
+    ~~~~~~~~~~~~~~^^^^^^^
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/httpx/_transports/default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectTimeout
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/bot.py", line 187, in <module>
+    main()
+    ~~~~^^
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/bot.py", line 183, in main
+    run_production_mode()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/bot.py", line 165, in run_production_mode
+    app.run_polling(allowed_updates=Update.ALL_TYPES)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/telegram/ext/_application.py", line 839, in run_polling
+    return self.__run(
+           ~~~~~~~~~~^
+        updater_coroutine=self.updater.start_polling(
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<9 lines>...
+        close_loop=close_loop,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/telegram/ext/_application.py", line 1054, in __run
+    loop.run_until_complete(self._bootstrap_initialize(max_retries=bootstrap_retries))
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/alan/.local/share/uv/python/cpython-3.14.2-linux-x86_64-gnu/lib/python3.14/asyncio/base_events.py", line 719, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/telegram/ext/_application.py", line 1014, in _bootstrap_initialize
+    await network_retry_loop(
+    ...<4 lines>...
+    )
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/telegram/ext/_utils/networkloop.py", line 161, in network_retry_loop
+    await do_action()
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/telegram/ext/_utils/networkloop.py", line 136, in do_action
+    await action_cb()
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/telegram/ext/_application.py", line 489, in initialize
+    await self.bot.initialize()
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/telegram/ext/_extbot.py", line 316, in initialize
+    await super().initialize()
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/telegram/_bot.py", line 857, in initialize
+    await self.get_me()
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/telegram/ext/_extbot.py", line 2008, in get_me
+    return await super().get_me(
+           ^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/telegram/_bot.py", line 990, in get_me
+    result = await self._post(
+             ^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/telegram/_bot.py", line 704, in _post
+    return await self._do_post(
+           ^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/telegram/ext/_extbot.py", line 370, in _do_post
+    return await super()._do_post(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/telegram/_bot.py", line 733, in _do_post
+    result = await request.post(
+             ^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/telegram/request/_baserequest.py", line 198, in post
+    result = await self._request_wrapper(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/telegram/request/_baserequest.py", line 305, in _request_wrapper
+    code, payload = await self.do_request(
+                    ^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "/home/alan/Toolkit/se-toolkit-lab-7/bot/.venv/lib/python3.14/site-packages/telegram/request/_httpxrequest.py", line 296, in do_request
+    raise TimedOut from err
+telegram.error.TimedOut: Timed out

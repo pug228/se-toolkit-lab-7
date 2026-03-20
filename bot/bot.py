@@ -8,7 +8,17 @@ Usage:
 """
 
 import argparse
+import logging
 import sys
+
+from telegram import Update
+from telegram.ext import (
+    Application,
+    CommandHandler,
+    ContextTypes,
+    MessageHandler,
+    filters,
+)
 
 
 def handle_start(user_input: str = "") -> str:
@@ -49,7 +59,7 @@ def handle_scores(user_input: str = "") -> str:
 def handle_message(message: str) -> str:
     """
     Route a message to the appropriate handler.
-    
+
     In test mode, this is called directly with the test input.
     In production, Telegram messages are passed here.
     """
@@ -71,7 +81,7 @@ def handle_message(message: str) -> str:
 def run_test_mode(test_input: str) -> None:
     """
     Run in test mode: call handler directly and print result.
-    
+
     No Telegram connection is made. Exit code is 0 on success.
     """
     response = handle_message(test_input)
@@ -79,14 +89,80 @@ def run_test_mode(test_input: str) -> None:
     sys.exit(0)
 
 
+async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Handle /start command from Telegram."""
+    response = handle_start("")
+    await update.message.reply_text(response)
+
+
+async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Handle /help command from Telegram."""
+    response = handle_help("")
+    await update.message.reply_text(response)
+
+
+async def health_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Handle /health command from Telegram."""
+    response = handle_health("")
+    await update.message.reply_text(response)
+
+
+async def labs_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Handle /labs command from Telegram."""
+    response = handle_labs("")
+    await update.message.reply_text(response)
+
+
+async def scores_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Handle /scores command from Telegram."""
+    arg = context.args[0] if context.args else ""
+    response = handle_scores(arg)
+    await update.message.reply_text(response)
+
+
+async def handle_text_message(
+    update: Update, context: ContextTypes.DEFAULT_TYPE
+) -> None:
+    """Handle plain text messages from Telegram."""
+    text = update.message.text
+    response = handle_message(text)
+    await update.message.reply_text(response)
+
+
 def run_production_mode() -> None:
     """
     Run in production mode: connect to Telegram and listen for messages.
-    
-    TODO: Task 4 - implement Telegram bot loop
     """
-    print("Production mode not yet implemented. Use --test for testing.")
-    sys.exit(1)
+    from config import load_config
+
+    config = load_config()
+
+    if not config.bot_token:
+        print("Error: BOT_TOKEN not found in .env.bot.secret")
+        sys.exit(1)
+
+    # Set up logging
+    logging.basicConfig(
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+        level=logging.INFO,
+    )
+
+    # Create application
+    app = Application.builder().token(config.bot_token).build()
+
+    # Add handlers
+    app.add_handler(CommandHandler("start", start_command))
+    app.add_handler(CommandHandler("help", help_command))
+    app.add_handler(CommandHandler("health", health_command))
+    app.add_handler(CommandHandler("labs", labs_command))
+    app.add_handler(CommandHandler("scores", scores_command))
+    app.add_handler(
+        MessageHandler(filters.TEXT & ~filters.COMMAND, handle_text_message)
+    )
+
+    # Start polling
+    print("Bot starting...")
+    app.run_polling(allowed_updates=Update.ALL_TYPES)
 
 
 def main() -> None:
@@ -96,11 +172,11 @@ def main() -> None:
         "--test",
         type=str,
         metavar="INPUT",
-        help="Test mode: pass a command string and print response"
+        help="Test mode: pass a command string and print response",
     )
-    
+
     args = parser.parse_args()
-    
+
     if args.test:
         run_test_mode(args.test)
     else:
