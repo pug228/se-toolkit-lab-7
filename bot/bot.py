@@ -27,6 +27,9 @@ from handlers import (
     handle_health,
     handle_labs,
     handle_scores,
+    handle_health_async,
+    handle_labs_async,
+    handle_scores_async,
 )
 
 
@@ -77,20 +80,20 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 
 async def health_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Handle /health command from Telegram."""
-    response = handle_health("")
+    response = await handle_health_async("")
     await update.message.reply_text(response)
 
 
 async def labs_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Handle /labs command from Telegram."""
-    response = handle_labs("")
+    response = await handle_labs_async("")
     await update.message.reply_text(response)
 
 
 async def scores_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Handle /scores command from Telegram."""
     arg = context.args[0] if context.args else ""
-    response = handle_scores(arg)
+    response = await handle_scores_async(arg)
     await update.message.reply_text(response)
 
 

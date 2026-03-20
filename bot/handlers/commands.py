@@ -1,8 +1,12 @@
 """
-Command handlers for slash commands - now with real backend data.
+Command handlers for slash commands - with real backend data.
 
 Each handler is a pure function: takes input string, returns response string.
 No Telegram dependencies here - same function works from --test, tests, or Telegram.
+
+The handlers use asyncio to call the async API client. They work in both:
+- Sync context (--test mode): uses asyncio.run()
+- Async context (Telegram): uses await directly via async versions
 """
 
 import asyncio
@@ -33,8 +37,8 @@ def handle_help(user_input: str = "") -> str:
 /scores <lab> - Show scores for a lab"""
 
 
-async def _handle_health_async() -> str:
-    """Async implementation of health check."""
+async def handle_health_async(user_input: str = "") -> str:
+    """Async health check - for use in Telegram handlers."""
     client = _get_client()
     try:
         items = await client.get_items()
@@ -47,8 +51,18 @@ async def _handle_health_async() -> str:
 
 
 def handle_health(user_input: str = "") -> str:
-    """Handle /health command - backend status check."""
-    return asyncio.run(_handle_health_async())
+    """Handle /health command - backend status check.
+
+    Works in sync context (--test mode).
+    For async context (Telegram), use handle_health_async().
+    """
+    try:
+        loop = asyncio.get_running_loop()
+        # We're in an async context - should use async version
+        raise RuntimeError("no running event loop")
+    except RuntimeError:
+        # No running loop - safe to use asyncio.run()
+        return asyncio.run(handle_health_async(user_input))
 
 
 def _format_lab_name(item: dict[str, Any]) -> str:
@@ -58,8 +72,8 @@ def _format_lab_name(item: dict[str, Any]) -> str:
     return f"- Lab {lab_id} — {lab_title}"
 
 
-async def _handle_labs_async() -> str:
-    """Async implementation of labs listing."""
+async def handle_labs_async(user_input: str = "") -> str:
+    """Async labs listing - for use in Telegram handlers."""
     client = _get_client()
     try:
         items = await client.get_items()
@@ -84,12 +98,20 @@ async def _handle_labs_async() -> str:
 
 
 def handle_labs(user_input: str = "") -> str:
-    """Handle /labs command - list available labs."""
-    return asyncio.run(_handle_labs_async())
+    """Handle /labs command - list available labs.
+
+    Works in sync context (--test mode).
+    For async context (Telegram), use handle_labs_async().
+    """
+    try:
+        loop = asyncio.get_running_loop()
+        raise RuntimeError("no running event loop")
+    except RuntimeError:
+        return asyncio.run(handle_labs_async(user_input))
 
 
-async def _handle_scores_async(lab: str) -> str:
-    """Async implementation of scores lookup."""
+async def handle_scores_async(lab: str) -> str:
+    """Async scores lookup - for use in Telegram handlers."""
     if not lab:
         return "Please specify a lab, e.g., /scores lab-04"
 
@@ -121,5 +143,13 @@ async def _handle_scores_async(lab: str) -> str:
 
 
 def handle_scores(user_input: str = "") -> str:
-    """Handle /scores command - show scores for a lab."""
-    return asyncio.run(_handle_scores_async(user_input.strip()))
+    """Handle /scores command - show scores for a lab.
+
+    Works in sync context (--test mode).
+    For async context (Telegram), use handle_scores_async().
+    """
+    try:
+        loop = asyncio.get_running_loop()
+        raise RuntimeError("no running event loop")
+    except RuntimeError:
+        return asyncio.run(handle_scores_async(user_input.strip()))
