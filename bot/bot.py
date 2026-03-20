@@ -176,8 +176,19 @@ def run_production_mode() -> None:
         level=logging.INFO,
     )
 
-    # Create application with optional proxy support
+    # Create application with optional proxy support and increased timeouts
+    from telegram.request import HTTPXRequest
+
     builder = Application.builder().token(config.bot_token)
+
+    # Configure request with longer timeouts for unstable connections
+    request = HTTPXRequest(
+        connect_timeout=30.0,  # Connection timeout (was 10s)
+        read_timeout=60.0,  # Read timeout (was 10s)
+        write_timeout=30.0,  # Write timeout (was 10s)
+        pool_timeout=30.0,  # Pool timeout (was 10s)
+    )
+    builder = builder.request(request)
 
     if config.proxy_url:
         builder = builder.proxy_url(config.proxy_url)
