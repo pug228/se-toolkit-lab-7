@@ -29,7 +29,7 @@ class ApiClient:
         self._client = httpx.AsyncClient(
             base_url=self.base_url,
             headers={"Authorization": f"Bearer {self.api_key}"},
-            timeout=10.0,
+            timeout=30.0,  # Increased timeout for sync operations
         )
 
     async def close(self) -> None:
@@ -82,11 +82,11 @@ class ApiClient:
         """Get per-group performance for a specific lab."""
         return await self._request("GET", f"/analytics/groups?lab={lab}")
 
-    async def get_top_learners(
-        self, lab: str, limit: int = 5
-    ) -> list[dict[str, Any]]:
+    async def get_top_learners(self, lab: str, limit: int = 5) -> list[dict[str, Any]]:
         """Get top N learners for a specific lab."""
-        return await self._request("GET", f"/analytics/top-learners?lab={lab}&limit={limit}")
+        return await self._request(
+            "GET", f"/analytics/top-learners?lab={lab}&limit={limit}"
+        )
 
     async def get_completion_rate(self, lab: str) -> dict[str, Any]:
         """Get completion percentage for a specific lab."""

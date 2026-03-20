@@ -11,7 +11,7 @@ import argparse
 import logging
 import sys
 
-from telegram import Update
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (
     Application,
     CommandHandler,
@@ -31,14 +31,15 @@ from handlers import (
     handle_labs_async,
     handle_scores_async,
 )
+from handlers.intent_router import route_intent, route_intent_async
 
 
 def handle_message(message: str) -> str:
     """
     Route a message to the appropriate handler.
 
-    In test mode, this is called directly with the test input.
-    In production, Telegram messages are passed here.
+    Slash commands go to specific handlers.
+    Plain text goes to the LLM intent router.
     """
     if message.startswith("/start"):
         return handle_start(message[6:].strip())
@@ -51,8 +52,8 @@ def handle_message(message: str) -> str:
     elif message.startswith("/scores"):
         return handle_scores(message[7:].strip())
     else:
-        # TODO: Task 3 - route to LLM for natural language
-        return "I didn't understand that. Try /help for available commands."
+        # Route to LLM for natural language understanding
+        return route_intent(message)
 
 
 def run_test_mode(test_input: str) -> None:
@@ -69,13 +70,40 @@ def run_test_mode(test_input: str) -> None:
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Handle /start command from Telegram."""
     response = handle_start("")
-    await update.message.reply_text(response)
+
+    # Add inline keyboard buttons for common actions
+    keyboard = [
+        [
+            InlineKeyboardButton("📋 Available Labs", callback_data="labs"),
+            InlineKeyboardButton("💊 Health Check", callback_data="health"),
+        ],
+        [
+            InlineKeyboardButton("📊 Scores", callback_data="scores"),
+            InlineKeyboardButton("❓ Help", callback_data="help"),
+        ],
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+
+    await update.message.reply_text(response, reply_markup=reply_markup)
 
 
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Handle /help command from Telegram."""
     response = handle_help("")
-    await update.message.reply_text(response)
+
+    # Add inline keyboard buttons
+    keyboard = [
+        [
+            InlineKeyboardButton("📋 Available Labs", callback_data="labs"),
+            InlineKeyboardButton("💊 Health Check", callback_data="health"),
+        ],
+        [
+            InlineKeyboardButton("📊 Scores for lab-04", callback_data="scores_lab-04"),
+        ],
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+
+    await update.message.reply_text(response, reply_markup=reply_markup)
 
 
 async def health_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -100,10 +128,34 @@ async def scores_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
 async def handle_text_message(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> None:
-    """Handle plain text messages from Telegram."""
+    """Handle plain text messages from Telegram using LLM intent routing."""
     text = update.message.text
-    response = handle_message(text)
+    response = await route_intent_async(text)
     await update.message.reply_text(response)
+
+
+async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Handle inline keyboard button callbacks."""
+    query = update.callback_query
+    await query.answer()
+
+    callback_data = query.data
+
+    if callback_data == "labs":
+        response = await handle_labs_async("")
+    elif callback_data == "health":
+        response = await handle_health_async("")
+    elif callback_data == "help":
+        response = handle_help("")
+    elif callback_data.startswith("scores"):
+        # Extract lab from callback data like "scores_lab-04"
+        parts = callback_data.split("_")
+        lab = parts[1] if len(parts) > 1 else "lab-04"
+        response = await handle_scores_async(lab)
+    else:
+        response = "Please select an option from the menu."
+
+    await query.edit_message_text(response)
 
 
 def run_production_mode() -> None:
@@ -136,6 +188,10 @@ def run_production_mode() -> None:
     app.add_handler(
         MessageHandler(filters.TEXT & ~filters.COMMAND, handle_text_message)
     )
+    # Add callback handler for inline keyboard buttons
+    from telegram.ext import CallbackQueryHandler
+
+    app.add_handler(CallbackQueryHandler(button_callback))
 
     # Start polling
     print("Bot starting...")
