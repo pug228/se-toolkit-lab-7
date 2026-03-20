@@ -13,6 +13,9 @@ from .commands import (
     handle_health,
     handle_labs,
     handle_scores,
+    handle_health_async,
+    handle_labs_async,
+    handle_scores_async,
 )
 
 __all__ = [
@@ -21,4 +24,7 @@ __all__ = [
     "handle_health",
     "handle_labs",
     "handle_scores",
+    "handle_health_async",
+    "handle_labs_async",
+    "handle_scores_async",
 ]
