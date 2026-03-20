@@ -24,6 +24,7 @@ class Config:
     llm_api_key: str = ""
     llm_api_base_url: str = ""
     llm_api_model: str = ""
+    proxy_url: str = ""
 
 
 def load_config() -> Config:
@@ -47,4 +48,5 @@ def load_config() -> Config:
         llm_api_key=os.getenv("LLM_API_KEY", ""),
         llm_api_base_url=os.getenv("LLM_API_BASE_URL", ""),
         llm_api_model=os.getenv("LLM_API_MODEL", ""),
+        proxy_url=os.getenv("PROXY_URL", ""),
     )

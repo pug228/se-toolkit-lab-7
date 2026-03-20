@@ -176,8 +176,13 @@ def run_production_mode() -> None:
         level=logging.INFO,
     )
 
-    # Create application
-    app = Application.builder().token(config.bot_token).build()
+    # Create application with optional proxy support
+    builder = Application.builder().token(config.bot_token)
+
+    if config.proxy_url:
+        builder = builder.proxy_url(config.proxy_url)
+
+    app = builder.build()
 
     # Add handlers
     app.add_handler(CommandHandler("start", start_command))
