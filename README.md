@@ -91,3 +91,83 @@ By the end of this lab, you should be able to say:
 2. [Backend Integration](./lab/tasks/required/task-2.md) — P0: slash commands + real data
 3. [Intent-Based Natural Language Routing](./lab/tasks/required/task-3.md) — P1: LLM tool use
 4. [Containerize and Document](./lab/tasks/required/task-4.md) — P3: containerize + deploy
+
+## Deploy
+
+### Prerequisites
+
+1. Complete [lab setup](./lab/setup/setup-simple.md#lab-setup) including:
+   - Backend running on your VM
+   - Qwen Code API proxy running (`~/qwen-code-oai-proxy`)
+   - Telegram bot token from @BotFather
+
+2. Copy environment files on your VM:
+
+   ```bash
+   cd ~/se-toolkit-lab-7
+   cp .env.docker.example .env.docker.secret
+   cp .env.bot.example .env.bot.secret
+   ```
+
+3. Edit `.env.docker.secret` and set:
+   - `BOT_TOKEN` — your Telegram bot token
+   - `LLM_API_KEY` — your Qwen API key
+   - `LLM_API_BASE_URL` — `http://host.docker.internal:42005/v1`
+   - `LLM_API_MODEL` — `coder-model`
+
+### Deploy with Docker Compose
+
+1. Build and start all services (including the bot):
+
+   ```bash
+   cd ~/se-toolkit-lab-7
+   docker compose --env-file .env.docker.secret up -d --build
+   ```
+
+2. Check the bot is running:
+
+   ```bash
+   docker compose logs bot
+   ```
+
+   You should see "Bot starting..." in the logs.
+
+3. Test in Telegram:
+   - Send `/start` to your bot
+   - Try "what labs are available?"
+   - Try "show me scores for lab 4"
+
+### Troubleshooting
+
+**Bot doesn't respond in Telegram:**
+
+1. Check logs: `docker compose logs bot | tail -50`
+2. Common issues:
+   - `BOT_TOKEN` is wrong or missing
+   - Telegram is blocked — set `PROXY_URL` in `.env.docker.secret`
+   - Bot container crashed — check logs for errors
+
+**LLM errors (HTTP 401/500):**
+
+1. Verify Qwen proxy is running: `curl http://localhost:42005/v1/models -H "Authorization: Bearer YOUR_KEY"`
+2. Restart proxy: `cd ~/qwen-code-oai-proxy && docker compose restart`
+3. Check `LLM_API_KEY` and `LLM_API_BASE_URL` in `.env.docker.secret`
+
+**Backend connection errors:**
+
+1. Verify backend is healthy: `docker compose ps backend`
+2. Check backend logs: `docker compose logs backend | tail -20`
+3. Ensure bot uses `http://backend:8000` (not `localhost`)
+
+### Stop or restart the bot
+
+```bash
+# Stop the bot
+docker compose stop bot
+
+# Restart the bot
+docker compose restart bot
+
+# Rebuild after code changes
+docker compose --env-file .env.docker.secret up -d --build bot
+```
